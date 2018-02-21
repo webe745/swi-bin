@@ -1,0 +1,5 @@
+#!/bin/sh
+set -e
+
+cd ~/utery/manageiq
+bundle exec bin/rails s
