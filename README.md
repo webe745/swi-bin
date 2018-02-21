@@ -18,3 +18,5 @@
 * `git pause` - like `git stash` except it creates a temporary commit on the current branch
 * `git resume` - like `git stash apply` for `git pause`
 * `git where-pr <commit>` - opens github with the PR containing the mentioned commit
+* `git branch-name` - outputs the name of the current branch
+* `git up` - updates master from upstream
