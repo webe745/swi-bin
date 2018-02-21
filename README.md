@@ -17,3 +17,4 @@
 
 * `git pause` - like `git stash` except it creates a temporary commit on the current branch
 * `git resume` - like `git stash apply` for `git pause`
+* `git where-pr <commit>` - opens github with the PR containing the mentioned commit
