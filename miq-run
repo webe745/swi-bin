@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TERMINAL="open -a Terminal.app"
+
+cd ~/utery/manageiq
+$TERMINAL "bundle exec bin/rails s" &
+
+cd ~/utery/manageiq-ui-classic
+$TERMINAL "bundle exec bin/webpack --watch" &
