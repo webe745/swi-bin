@@ -7,6 +7,25 @@ require DIR + '/../manageiq/config/environment'
 
 
 # cloud provider
-ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
+ems = ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
+ems_network = ManageIQ::Providers::Openstack::NetworkManager.last
+
+# cloud tenant
+cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems.id)
+
+# cloud network
+cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems.id)
+
+# create service
+user = User.find_by(:name => 'Administrator')
+miq_group =  MiqGroup.find_by(:description => "EvmGroup-super_administrator")
+tenant = Tenant.all.first
+
+service_template = ServiceTemplateCatalog.create!(:name => 'new', :description => 'new one', :tenant_id => tenant)
+service =  Service.create!(:name => 'some-name', :description => 'jojo', :service_template_id => service_template.id , :options => {:dialog=>{"dialog_text_box_1"=>"something"}}, :display => true, :evm_owner_id => user.id, :miq_group_id => miq_group.id, :tenant_id=> tenant.id)
+
+# amazon provider? - storage vec
 
 
+# done
+puts "OK"
