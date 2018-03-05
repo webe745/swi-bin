@@ -34,13 +34,16 @@ ActiveRecord::Base.transaction do
   cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'off', :ems_ref => ems_ref)
 
   # availability zone
-  availability_zone = AvailabilityZone.create!(:name => 'Zone', :ems_id => ems.id, :ems_ref => ems_ref)
+  availability_zone = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.create!(:name => 'Zone', :ems_id => ems.id, :ems_ref => ems_ref)
 
   # cloud volume
-  cloud_volume = CloudVolume.create!(:name => 'Cloud Volume', :ems_id => ems.id, :availability_zone_id => availability_zone.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
+  cloud_volume = ManageIQ::Providers::Openstack::CloudManager::CloudVolume.create!(:name => 'Cloud Volume', :ems_id => ems.id, :availability_zone_id => availability_zone.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
 
   # cloud volume backup
-  cloud_volume_backup = CloudVolumeBackup.create!(:ems_id => ems.id, :name => 'Cloud Volume Backup', :cloud_volume_id => cloud_volume.id, :availability_zone_id => availability_zone.id, :ems_ref => ems_ref)
+  cloud_volume_backup = ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup.create!(:ems_id => ems.id, :name => 'Cloud Volume Backup', :cloud_volume_id => cloud_volume.id, :availability_zone_id => availability_zone.id, :ems_ref => ems_ref)
+
+  # flavor
+  flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.create!(:name => 'flavor', :ems_id => ems.id, :enabled => true, :memory => 1048576, :description => 'flavor', :ems_ref => ems_ref)
 end
 
 
