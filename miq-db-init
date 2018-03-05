@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+# Load Rails
+ENV['RAILS_ENV'] = ARGV[0] || 'development'
+DIR = File.dirname(__FILE__)
+require DIR + '/../manageiq/config/environment'
+
+
+# cloud provider
+ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
+
+
