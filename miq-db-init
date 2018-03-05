@@ -5,26 +5,43 @@ ENV['RAILS_ENV'] = ARGV[0] || 'development'
 DIR = File.dirname(__FILE__)
 require DIR + '/../manageiq/config/environment'
 
+$id = 0
+def ems_ref
+  "whatever-#{$id += 1}"
+end
 
-# cloud provider
-ems = ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
-ems_network = ManageIQ::Providers::Openstack::NetworkManager.last
 
-# cloud tenant
-cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems.id)
+ActiveRecord::Base.transaction do
+  # cloud provider
+  ems = ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
+  ems_network = ManageIQ::Providers::Openstack::NetworkManager.last
 
-# cloud network
-cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems.id)
+  # cloud tenant
+  cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems.id, :ems_ref => ems_ref)
 
-# create service
-user = User.find_by(:name => 'Administrator')
-miq_group =  MiqGroup.find_by(:description => "EvmGroup-super_administrator")
-tenant = Tenant.all.first
+  # cloud network
+  cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
 
-service_template = ServiceTemplateCatalog.create!(:name => 'new', :description => 'new one', :tenant_id => tenant)
-service =  Service.create!(:name => 'some-name', :description => 'jojo', :service_template_id => service_template.id , :options => {:dialog=>{"dialog_text_box_1"=>"something"}}, :display => true, :evm_owner_id => user.id, :miq_group_id => miq_group.id, :tenant_id=> tenant.id)
+  # create service
+  user = User.find_by(:name => 'Administrator')
+  miq_group = MiqGroup.find_by(:description => "EvmGroup-super_administrator")
+  tenant = Tenant.all.first
 
-# amazon provider? - storage vec
+  service_template = ServiceTemplateCatalog.create!(:name => 'new', :description => 'new one', :tenant_id => tenant.id)
+  service =  Service.create!(:name => 'some-name', :description => 'jojo', :service_template_id => service_template.id , :options => {:dialog=>{"dialog_text_box_1"=>"something"}}, :display => true, :evm_owner_id => user.id, :miq_group_id => miq_group.id, :tenant_id=> tenant.id)
+
+  # cloud vm
+  cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'off', :ems_ref => ems_ref)
+
+  # availability zone
+  availability_zone = AvailabilityZone.create!(:name => 'Zone', :ems_id => ems.id, :ems_ref => ems_ref)
+
+  # cloud volume
+  cloud_volume = CloudVolume.create!(:name => 'Cloud Volume', :ems_id => ems.id, :availability_zone_id => availability_zone.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
+
+  # cloud volume backup
+  cloud_volume_backup = CloudVolumeBackup.create!(:ems_id => ems.id, :name => 'Cloud Volume Backup', :cloud_volume_id => cloud_volume.id, :availability_zone_id => availability_zone.id, :ems_ref => ems_ref)
+end
 
 
 # done
