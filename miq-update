@@ -5,5 +5,11 @@ cd ~/utery/manageiq-ui-classic
 git up
 
 cd ~/utery/manageiq
+# git up
+
+# ovirt Gemfile hack
+git checkout Gemfile
 git up
+sed -i 's/^  .*ovirt/#&/' Gemfile
+
 bin/update && echo OK || echo FAIL
