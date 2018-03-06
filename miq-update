@@ -10,6 +10,6 @@ cd ~/utery/manageiq
 # ovirt Gemfile hack
 git checkout Gemfile
 git up
-sed -i 's/^  .*ovirt/#&/' Gemfile
+sed -i -e 's/^  .*ovirt/#&/' Gemfile
 
 bin/update && echo OK || echo FAIL
