@@ -15,6 +15,8 @@ cd ~/utery/manageiq
 # ovirt Gemfile hack
 git checkout Gemfile
 git up
-sed -i -e 's/^  .*ovirt/#&/' Gemfile
+# macosx sed -i *needs* a param, linux can't use empty one
+sed '-i~' -e 's/^  .*ovirt/#&/' Gemfile
+rm 'Gemfile~'
 
 bin/update && echo OK || echo FAIL
