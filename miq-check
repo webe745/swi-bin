@@ -1,0 +1,72 @@
+#!/bin/bash
+
+ERR=0
+
+carp() {
+	ERR=$((ERR + 1))
+	echo miq-check: "$@" 1>&2
+}
+
+croak() {
+	carp "$@"
+	exit 1
+}
+
+need_dir() {
+	if ! [ -d "$1" ]; then
+		croak "$1" must be a directory '(or a symlink)'
+	fi
+}
+
+repo_login() {
+	cd "$1"
+	git remote -v | grep ^origin | head -n1 | sed -e 's/^.*github.com.//' -e 's/\/.*//'
+}
+
+check_repo() {
+	cd "$1"
+	repo=$(basename "$1")
+
+	[ -d .git ] || croak "$repo: not a git repo"
+
+	# remotes: presence
+	[ `git remote -v | grep ^origin | wc -l` -eq 2 ] || carp "$repo: missing origin"
+	[ `git remote -v | grep ^upstream | wc -l` -eq 2 ] || carp "$repo: missing upstream"
+
+	# remotes: right url
+	git remote -v | grep ^origin | grep -q ManageIQ && carp "$repo: origin should not contain ManageIQ"
+	git remote -v | grep ^upstream | grep -q ManageIQ || carp "$repo: upstream must contain ManageIQ"
+
+	# clean master
+	[ `git rev-list upstream/master..master --count` -eq 0 ] || carp "$repo: extra commits on master branch"
+}
+
+
+need_dir ~/utery
+need_dir ~/utery/manageiq
+need_dir ~/utery/manageiq-ui-classic
+
+# compare github logins in both repos
+miq_login=$(repo_login ~/utery/manageiq)
+uic_login=$(repo_login ~/utery/manageiq-ui-classic)
+[ "$miq_login" = "$uic_login" ] || croak "github logins don't match: '$miq_login' vs '$uic_login'"
+
+# check_bundler
+cd ~/utery/manageiq
+gemfile=`ls bundler.d/*.rb`
+[ -n "$gemfile" ] || croak nothing under manageiq/bundler.d/
+grep -q '^\s*override_gem' "$gemfile" || croak no override_gem in "$gemfile"
+
+# check symlink
+cd ~/utery/manageiq-ui-classic
+[ -h spec/manageiq ] || croak missing manageiq-ui-classic/spec/manageiq symlink
+[ -d spec/manageiq ] || croak broken manageiq-ui-classic/spec/manageiq symlink
+[ -f spec/manageiq/bundler.d/*.rb ] || croak "manageiq-ui-classic/spec/manageiq symlink doesn't link the real manageiq"
+
+check_repo ~/utery/manageiq
+check_repo ~/utery/manageiq-ui-classic
+
+
+echo "login: $uic_login"
+[ "$ERR" -gt 0 ] && exit 1
+echo "OK :)"
