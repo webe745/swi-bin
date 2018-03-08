@@ -11,6 +11,8 @@
 * `miq-run` - run manageiq in new terminals
 * `miq-update` - update manageiq
 * `swi-update` - update the swi-bin repo
+* `miq-check` - check repos for common problems
+* `miq-db-init` - add some data to database
 
 
 ##### Git commands
