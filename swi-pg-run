@@ -1,0 +1,2 @@
+#!/bin/sh
+pg_ctl -D /usr/local/var/postgres start 2>/dev/null >/dev/null &

@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+system('swi-pg-run')
 
 # Load Rails
 ENV['RAILS_ENV'] = ARGV[0] || 'development'

@@ -1,4 +1,5 @@
 #!/bin/sh
+swi-pg-run
 set -e
 
 cd ~/utery/manageiq-ui-classic
