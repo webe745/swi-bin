@@ -32,7 +32,7 @@ ActiveRecord::Base.transaction do
   service =  Service.create!(:name => 'some-name', :description => 'jojo', :service_template_id => service_template.id , :options => {:dialog=>{"dialog_text_box_1"=>"something"}}, :display => true, :evm_owner_id => user.id, :miq_group_id => miq_group.id, :tenant_id=> tenant.id)
 
   # cloud vm
-  cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'off', :ems_ref => ems_ref)
+  cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'SHUTOFF', :ems_ref => ems_ref)
 
   # availability zone
   availability_zone = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.create!(:name => 'Zone', :ems_id => ems.id, :ems_ref => ems_ref)
