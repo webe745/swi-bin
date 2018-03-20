@@ -2,14 +2,14 @@
 swi-pg-run
 set -e
 
-cd ~/utery/manageiq-ui-classic
+cd ~/ctvrtek/manageiq-ui-classic
 # git up
 
 # ovirt network hack
 git checkout app/controllers/application_controller/network.rb
 git up
 
-cd ~/utery/manageiq
+cd ~/ctvrtek/manageiq
 # git up
 
 # ovirt Gemfile hack

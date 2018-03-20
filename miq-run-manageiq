@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
 
-cd ~/utery/manageiq
+cd ~/ctvrtek/manageiq
 bundle exec bin/rails s

@@ -42,29 +42,29 @@ check_repo() {
 }
 
 
-need_dir ~/utery
-need_dir ~/utery/manageiq
-need_dir ~/utery/manageiq-ui-classic
+need_dir ~/ctvrtek
+need_dir ~/ctvrtek/manageiq
+need_dir ~/ctvrtek/manageiq-ui-classic
 
 # compare github logins in both repos
-miq_login=$(repo_login ~/utery/manageiq)
-uic_login=$(repo_login ~/utery/manageiq-ui-classic)
+miq_login=$(repo_login ~/ctvrtek/manageiq)
+uic_login=$(repo_login ~/ctvrtek/manageiq-ui-classic)
 [ "$miq_login" = "$uic_login" ] || croak "github logins don't match: '$miq_login' vs '$uic_login'"
 
 # check_bundler
-cd ~/utery/manageiq
+cd ~/ctvrtek/manageiq
 gemfile=`ls bundler.d/*.rb`
 [ -n "$gemfile" ] || croak nothing under manageiq/bundler.d/
 grep -q '^\s*override_gem' "$gemfile" || croak no override_gem in "$gemfile"
 
 # check symlink
-cd ~/utery/manageiq-ui-classic
+cd ~/ctvrtek/manageiq-ui-classic
 [ -h spec/manageiq ] || croak missing manageiq-ui-classic/spec/manageiq symlink
 [ -d spec/manageiq ] || croak broken manageiq-ui-classic/spec/manageiq symlink
 [ -f spec/manageiq/bundler.d/*.rb ] || croak "manageiq-ui-classic/spec/manageiq symlink doesn't link the real manageiq"
 
-check_repo ~/utery/manageiq
-check_repo ~/utery/manageiq-ui-classic
+check_repo ~/ctvrtek/manageiq
+check_repo ~/ctvrtek/manageiq-ui-classic
 
 
 echo "login: $uic_login"

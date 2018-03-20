@@ -1,5 +1,5 @@
 #!/bin/sh
 set -e
 
-cd ~/utery/manageiq-ui-classic
+cd ~/ctvrtek/manageiq-ui-classic
 bin/webpack --watch
