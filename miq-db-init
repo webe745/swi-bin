@@ -3,7 +3,7 @@ system('swi-pg-run')
 
 # Load Rails
 ENV['RAILS_ENV'] = ARGV[0] || 'development'
-MIQ_DIR = ENV["HOME"] + '/utery/manageiq'
+MIQ_DIR = ENV["HOME"] + '/ctvrtek/manageiq'
 require MIQ_DIR + '/config/environment'
 
 $id = 0

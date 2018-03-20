@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ~/utery/manageiq-ui-classic
+cd ~/ctvrtek/manageiq-ui-classic
 
 cat > app/controllers/application_controller/network.rb <<EOF
 module ApplicationController::Network
