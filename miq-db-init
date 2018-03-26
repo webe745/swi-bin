@@ -18,7 +18,7 @@ ActiveRecord::Base.transaction do
   ems_network = ManageIQ::Providers::Openstack::NetworkManager.last
 
   # cloud tenant
-  cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems.id, :ems_ref => ems_ref)
+  cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems_network.id, :ems_ref => ems_ref)
 
   # cloud network
   cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
@@ -32,16 +32,16 @@ ActiveRecord::Base.transaction do
   service =  Service.create!(:name => 'some-name', :description => 'jojo', :service_template_id => service_template.id , :options => {:dialog=>{"dialog_text_box_1"=>"something"}}, :display => true, :evm_owner_id => user.id, :miq_group_id => miq_group.id, :tenant_id=> tenant.id)
 
   # cloud vm
-  cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'SHUTOFF', :ems_ref => ems_ref)
+  cloud_vm = ManageIQ::Providers::Openstack::CloudManager::Vm.create!(:ems_id => ems.id, :name => "vm", :vendor => 'openstack', :location => 'file://whatever', :raw_power_state => 'SHUTOFF', :ems_ref => ems_ref, :cloud_tenant_id => cloud_tenant.id)
 
   # availability zone
   availability_zone = ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone.create!(:name => 'Zone', :ems_id => ems.id, :ems_ref => ems_ref)
 
   # cloud volume
-  cloud_volume = ManageIQ::Providers::Openstack::CloudManager::CloudVolume.create!(:name => 'Cloud Volume', :ems_id => ems.id, :availability_zone_id => availability_zone.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
+  cloud_volume = ManageIQ::Providers::Openstack::CloudManager::CloudVolume.create!(:name => 'Cloud Volume', :ems_id => ems_network.id, :availability_zone_id => availability_zone.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
 
   # cloud volume backup
-  cloud_volume_backup = ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup.create!(:ems_id => ems.id, :name => 'Cloud Volume Backup', :cloud_volume_id => cloud_volume.id, :availability_zone_id => availability_zone.id, :ems_ref => ems_ref)
+  cloud_volume_backup = ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup.create!(:ems_id => ems_network.id, :name => 'Cloud Volume Backup', :cloud_volume_id => cloud_volume.id, :availability_zone_id => availability_zone.id, :ems_ref => ems_ref)
 
   # flavor
   flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.create!(:name => 'flavor', :ems_id => ems.id, :enabled => true, :memory => 1048576, :description => 'flavor', :ems_ref => ems_ref)
