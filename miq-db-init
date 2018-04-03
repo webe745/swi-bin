@@ -21,7 +21,7 @@ ActiveRecord::Base.transaction do
   cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems_network.id, :ems_ref => ems_ref)
 
   # cloud network
-  cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref)
+  cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref, :external_facing => true)
 
   # create service
   user = User.find_by(:name => 'Administrator')
