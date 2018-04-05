@@ -9,7 +9,7 @@ cd ~/ctvrtek/manageiq-ui-classic
 git checkout app/controllers/application_controller/network.rb
 git up
 miq-network
-bundle install --path vendor/bundle
+
 cd ~/ctvrtek/manageiq
 # git up
 
@@ -19,5 +19,9 @@ git up
 # macosx sed -i *needs* a param, linux can't use empty one
 sed '-i~' -e 's/^  .*ovirt/#&/' Gemfile
 rm 'Gemfile~'
+
+cd ~/ctvrtek/manageiq-ui-classic
+bundle install --path vendor/bundle
+cd ~/ctvrtek/manageiq
 
 bin/update && echo OK || echo FAIL
