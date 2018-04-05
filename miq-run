@@ -3,5 +3,5 @@ TERMINAL="open -a Terminal.app"
 
 swi-pg-run
 
-$TERMINAL ~/swi-bin/miq-run-manageiq &
-$TERMINAL ~/swi-bin/miq-run-manageiq-ui-classic &
+$TERMINAL ~/ctvrtek/swi-bin/miq-run-manageiq &
+$TERMINAL ~/ctvrtek/swi-bin/miq-run-manageiq-ui-classic &
