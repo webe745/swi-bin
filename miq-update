@@ -9,7 +9,7 @@ cd ~/ctvrtek/manageiq-ui-classic
 git checkout app/controllers/application_controller/network.rb
 git up
 miq-network
-
+bundle install --path vendor/bundle
 cd ~/ctvrtek/manageiq
 # git up
 
