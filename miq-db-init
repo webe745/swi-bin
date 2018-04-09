@@ -13,13 +13,23 @@ end
 
 
 ActiveRecord::Base.transaction do
+  all_tables = [NetworkRouter, CloudSubnet, ManageIQ::Providers::Openstack::CloudManager::Flavor, ManageIQ::Providers::Openstack::CloudManager::CloudVolumeBackup,
+                ManageIQ::Providers::Openstack::CloudManager::CloudVolume, ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone, ManageIQ::Providers::Openstack::CloudManager::Vm,
+                Service, ServiceTemplateCatalog, ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork, ManageIQ::Providers::Openstack::CloudManager::CloudTenant,
+                ManageIQ::Providers::Openstack::CloudManager]
+
+  all_tables.each do |table|
+    table.destroy_all
+
+    puts("Deleted: " + table.name)
+  end
   # cloud provider
   ems = ManageIQ::Providers::Openstack::CloudManager.create!(:name => "Openstack cloud", :hostname => '127.0.0.1', :zone_id => MiqServer.my_server.zone.id)
   ems_network = ManageIQ::Providers::Openstack::NetworkManager.last
 
   # cloud tenant
   cloud_tenant = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant", :ems_id => ems_network.id, :ems_ref => ems_ref)
-
+  cloud_tenant_two = ManageIQ::Providers::Openstack::CloudManager::CloudTenant.create!(:name => "cloud tenant two", :ems_id => ems.id, :ems_ref => ems_ref)
   # cloud network
   cloud_network = ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork.create!(:name => 'cloud network', :ems_id => ems_network.id, :cloud_tenant_id => cloud_tenant.id, :ems_ref => ems_ref, :external_facing => true)
 
@@ -45,6 +55,14 @@ ActiveRecord::Base.transaction do
 
   # flavor
   flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.create!(:name => 'flavor', :ems_id => ems.id, :enabled => true, :memory => 1048576, :description => 'flavor', :ems_ref => ems_ref)
+
+  # subnet for network router
+  cloud_subnet = CloudSubnet.create(:name => "Subnet", :cloud_network_id => cloud_network.id, :ems_ref => ems_ref)
+  cloud_subnet_two = CloudSubnet.create(:name => "Subnet Two", :cloud_network_id => cloud_network.id, :ems_ref => ems_ref)
+
+  # network router
+  network_router = NetworkRouter.create(:name => 'Network Router', :ems_ref => ems_ref, :ems_id => ems_network.id, :cloud_network_id => cloud_network.id, :cloud_tenant_id => cloud_tenant_two.id)
+
 end
 
 
