@@ -8,7 +8,6 @@ cd ~/utery/manageiq-ui-classic
 # ovirt network hack
 git checkout app/controllers/application_controller/network.rb
 git up
-miq-network
 
 cd ~/utery/manageiq
 # git up
