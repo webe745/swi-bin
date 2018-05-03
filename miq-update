@@ -19,4 +19,8 @@ git up
 sed '-i~' -e 's/^  .*ovirt/#&/' Gemfile
 rm 'Gemfile~'
 
+cd ~/ctvrtek/manageiq-ui-classic
+bundle install --path vendor/bundle
+cd ~/ctvrtek/manageiq
+
 bin/update && echo OK || echo FAIL
