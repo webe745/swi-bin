@@ -45,6 +45,10 @@ ActiveRecord::Base.transaction do
 
   # flavor
   flavor = ManageIQ::Providers::Openstack::CloudManager::Flavor.create!(:name => 'flavor', :ems_id => ems.id, :enabled => true, :memory => 1048576, :description => 'flavor', :ems_ref => ems_ref)
+
+  # router
+  router = NetworkRouter.new(:name => "mocked routerqqqq")
+  router.save!
 end
 
 
